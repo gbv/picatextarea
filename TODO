@@ -1,0 +1,11 @@
+Additional features
+-------------------
+* load records via unAPI
+* show level separators
+* highlight error lines
+* add a button bar 
+  with http://www.octolabs.com/javascripts/codemirror-ui/
+* show record diffs
+* show how to best apply syntax highlighting without an editor
+* show information about the current field
+* search and highlight specific fields by tag and subfield

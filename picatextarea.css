@@ -1,0 +1,8 @@
+/* PICA+ syntax highlighting for CodeMirror 2 */
+span.pica-tag       { color: #445588; font-weight: bold; }
+span.pica-tag-wrong { color: #dd1144; font-weight: bold; }
+span.pica-error     { color: #dd1144; }
+span.pica-sf        { color: #0086B3; font-weight: bold; }
+span.pica-value     { color: #000; }
+
+.pica-highline { background: #f0e68c !important; } /* TODO: needed where? */

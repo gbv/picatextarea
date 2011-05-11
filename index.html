@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+  <title>PICA textarea</title>
+
+  <script type="text/javascript" src="lib/jquery-1.5.2.min.js"></script>
+  <script type="text/javascript" src="lib/jquery-ui-1.8.12.custom.min.js"></script>
+
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <script src="lib/codemirror.js"></script>
+  <script src="picatextarea.js"></script>
+  <link rel="stylesheet" href="picatextarea.css">
+
+  <style type="text/css">
+/* styles for this page only */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.3;
+  font-size: 1em;
+  margin: 1.5em auto;
+  padding: 0 1em;
+}
+h1,h2,h3 {
+  font-weight: bold;
+  margin: 0;
+}
+h1 { font-size: 3em; }
+h2 { font-size: 1.2em; }
+pre {
+  background-color: #eee;
+  padding: 0.6em;
+}
+a:link, a:visited, .quasilink {
+  color: #00f;
+  cursor: pointer;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* additional styles for codemirror textareas */
+.CodeMirror {
+  border: 1px solid #ddd;
+  height: auto;
+  max-height: 600px;
+  font-family: 'Bitstream Vera Sans Mono','Courier New',monospace;
+  font-size: 12px;
+}
+.CodeMirror-gutter-text {
+  background: #eee;
+  color: #aaa;
+  border-right: 1px solid #ddd;
+  padding-right: 5px;
+}
+  </style>
+</head>
+<body>
+  <h1>PICA textarea</h1>
+  <p>PICA textarea is a JavaScript library to provide an editor interface
+    with syntax highlighting for PICA+ data. It is implemented as
+    <a href="http://codemirror.net/">CodeMirror2</a> mode and optionally as 
+    <a href="http://jqueryui.com/">jQuery ui</a> widget.</p>
+  <h2>Examples</h2>
+  <p>The following examples uses some additional stylesheet with the CSS 
+    classes <code>CodeMirror</code> and <code>CodeMirror-gutter-text</code>.
+    Try to edit the data or copy and paste some PICA+ data into the textarea!
+  </p>
+  <form><textarea id="picaedit-1">
+003@ $0123456789
+019@ $aXA-DE
+021A $aDas @Beispiel mit $$-Zeichen
+028C/01 $dMax$aMusterfrau$9a54321$8Musterfrau, Max
+099Z $0test$1test$Atest$Ztest
+101@ $a23$cPICA
+203@/01 $09875
+101@ $a23$cPICA
+203@/99 $056321
+123X $ax</textarea>
+</form>
+<script>
+var myTextarea = document.getElementById("picaedit-1");
+var picaedit = CodeMirror.fromTextArea( myTextarea, {
+  lineNumbers: true,
+  mode: "pica",
+  onChange: function(editor) { /* ... */ }
+});
+</script>
+  <p>The second PICA textarea is instanciated as widget. Click into the textarea 
+    to see some action:</p>
+  <form><textarea id="example2">
+003@&#x9;$0123456789
+019@ $aXA-DE
+021A $aDas @Beispiel mit $$-Zeichen
+028C/01 $dMax$aMusterfrau$9a54321$8Musterfrau, Max
+099Z $0test$1test$Atest$Ztest
+101@ $a23$cPICA
+203@/01 $09875
+101@ $a23$cPICA
+203@/99 $056321
+001@ $0x
+204@/99 $xfoo
+This is an error
+123A This also
+123X/ $ax
+123X $a</textarea></form>
+
+  <div>
+    <tt id="current-data">&#xA0;</tt>
+  </div>
+
+<script>
+$(document).ready(function() {
+  $('#example2').picatextarea({
+    showCurrentDataAt:'#current-data'
+  });
+});
+</script>
+  <!--p>The third examples shows how to only apply PICA+ syntax highlighting
+    without providing an editor.</p>
+  <div id="raw-pica">003@&#x9;$0123456789</div>
+<script>
+  /* TODO */
+</script-->
+
+  <p><em>Please report bug reports and feature requests!</em></p>
+  <h2>Requirements</h2>
+  <p>To replace a textarea in HTML by a PICA textarea, you first need to load
+    script and style sheet of <a href="http://codemirror.net/">codemirror</a>
+    (a copy is found in the <code>lib/</code> directory) and of picatextarea:</p>
+
+<pre>&lt;script src="lib/codemirror.js">&lt;/script>
+&lt;link rel="stylesheet" href="lib/codemirror.css">
+&lt;script src="picatextarea.js">&lt;/script>
+&lt;link rel="stylesheet" href="picatextarea.css">
+</pre>
+    
+  <p>To use PICA textarea as widget you further need to load jQuery and jQuery ui
+    scripts <em>before</em> the other scripts:</p>
+<pre>
+&lt;link type="text/css" href="css/themename/jquery-ui-1.8.12.custom.css" rel="Stylesheet" />   
+&lt;script type="text/javascript" src="lib/jquery-1.5.2.min.js">&lt;/script>
+&lt;script type="text/javascript" src="lib/jquery-ui-1.8.12.custom.min.js">&lt;/script>
+</pre>
+
+  <h2>Usage</h2>
+  <p>An editor instance can be created as as described in the 
+    <a href="http://codemirror.net/manual.html">CodeMirror2 manual</a>
+    with <code>pica</code> mode:</p>
+
+  <pre>var myPicaEditor = CodeMirror(document.body,{mode:"pica"});</pre>
+
+  <p>A typical use case is to apply the editor to an existing textarea
+    and to add some configuration settings:</p>
+
+  <pre>var myTextarea = document.getElementById("picaedit");
+var picaedit = CodeMirror.fromTextArea( myTextarea, {
+    lineNumbers: true,
+    mode: "pica",
+    onChange: function(editor) { /* ... */ }
+});</pre>
+
+  <p>Some interaction is possible through the codemirror 
+    <a href="http://codemirror.net/manual.html#api">programming API</a>.
+    More complex interaction is provided if you instanciate the editor
+    as jquery ui widget, applied to a textarea element:</p>
+
+  <pre>$(document).ready(function() {
+    $('#picaedit').picatextarea();
+});</pre>
+
+  <h2>Getting the code</h2>
+  <p>The source code and this example page is 
+    <a href="http://github.com/nichtich/picatextarea">available at github</a>. The only
+    files you need in addition to third party libraries are
+    <code>picatextarea.js</code> and <code>picatextarea.css</code>.
+    To compress the JavaScript file you can use
+    <a href="http://marijnhaverbeke.nl/uglifyjs">UglifyJS JavaScript minification</a>.
+  </p>
+
+  <h2 id="api">Widget Options</h2>
+  <dl>
+    <dt id="showCurrentDataAt"><code>showCurrentDataAt(element)</code></dt>
+    <dd>Always display tag, subfield, and value from the current cursor position at a
+      given element.</dd>
+  </dl>
+
+  <h2 id="api">Widget API</h2>
+  <p>Most functionality is implemented by the CodeMirror object. In addition the widget
+    provides the following methods:</p>
+
+  <dl>
+    <dt id="dataAtCursor"><code>getDataAt(pos) → object</code></dt>
+    <dd>Get <code>tag</code>, <code>subfield</code>, <code>value</code>, and
+      <code>valid</code> (whether the field is well-formed), from the current cursor
+      position, from a given <code>{line, ch}</code> position, or from a given line.
+      For instance <code>getDataAt(2)</code> returns an object that contains the 
+      tag of the third line. Positions are zero-based.</dd>
+      <dt id="showData"><code>showData({tag,subfield,value,valid},element)</code></dt>
+    <dd>Display <code>tag</code>, <code>subfield</code>, and/or <code>value</code>
+      (as returned by <code>dataAtCursor</code>) with syntax highlighting at the end of
+      a given DOM element.
+    </dd>
+  </dl>
+
+  <h2>Author and license</h2>
+  <p>PICA textarea is provided by Jakob Voss (<code>jakob.voss@gbv.de</code>) as 
+    public domain. CodeMirror2 is released under a MIT-style license. jQuery ui is 
+    released under the MIT or GPL Version 2 license.</p>
+</body>
+</html>
