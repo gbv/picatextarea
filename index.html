@@ -116,7 +116,15 @@ This is an error
 <script>
 $(document).ready(function() {
   $('#example2').picatextarea({
-    showCurrentDataAt:'#current-data'
+    showCurrentDataAt:'#current-data',
+    toolbar: ['undo','redo','name','load'],
+    load: function(id,callback) {
+      var url = "unapi-demo.php?callback=?";
+      $.getJSON( url, {id:id}, function(content) {
+        if (!content) content = { pp: "", error: "server did not respond" };
+        callback(content.pp,content.error);
+      } );
+    },
   });
 });
 </script>
@@ -170,7 +178,7 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
     as jquery ui widget, applied to a textarea element:</p>
 
   <pre>$(document).ready(function() {
-    $('#picaedit').picatextarea();
+    $('#picaedit').picatextarea( { /* widget options */ } );
 });</pre>
 
   <h2 id="api">Widget Options</h2>
@@ -179,11 +187,16 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
     <dd>Always display tag, subfield, and value from the current cursor position at a
       given element.</dd>
     <dt id="toolbar"><code>toolbar</code></dt>
-    <dd>Display a toolbar. With <code>toolbar: true</code> a default toolbar is shown.
-      Alternatively you can provide an array with toolbar elements. Known elements are
-      <code>undo</code>, <code>redo</code>, <code></code> ...
-      <!-- sort -->
+    <dd>Display a toolbar. With <code>toolbar: true</code> a default toolbar with buttons
+      for <code>undo</code> and <code>redo</code> is shown. Alternatively you can provide
+      an array with toolbar elements. Possible elements are 
+      <code>undo</code>, <code>redo</code>, <code>name</code>, <code>load</code>, and
+      <code>save</code>. <!-- More to follow: sort, load, save, ... -->
     </dd>
+    <dt id="load"><code>load</code><dt>
+    <dd>Function that is called to load content into the editor.</dd>
+    <dt id="save"><code>save</code><dt>
+    <dd>Function that is called to save content from the editor.</dd>
   </dl>
 
   <h2 id="api">Widget API</h2>
@@ -197,11 +210,15 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
       position, from a given <code>{line, ch}</code> position, or from a given line.
       For instance <code>getDataAt(2)</code> returns an object that contains the 
       tag of the third line. Positions are zero-based.</dd>
-      <dt id="showData"><code>showData({tag,subfield,value,valid},element)</code></dt>
+    <dt id="showData"><code>showData({tag,subfield,value,valid},element)</code></dt>
     <dd>Display <code>tag</code>, <code>subfield</code>, and/or <code>value</code>
       (as returned by <code>dataAtCursor</code>) with syntax highlighting at the end of
       a given DOM element.
     </dd>
+    <dt id="loadValue"><code>loadValue()</code></dt>
+    <dd>load data into the editor.</dd>
+    <dt id="saveValue"><code>saveValue()</code></dt>
+    <dd>save data from the editor.</dd>
   </dl>
 
   <h2>Getting the code</h2>
@@ -214,8 +231,10 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
   </p>
 
   <h2>Author and license</h2>
-  <p>PICA textarea is provided by Jakob Voss (<code>jakob.voss@gbv.de</code>) as 
-    public domain. CodeMirror2 is released under a MIT-style license. jQuery ui is 
+  <p>PICA textarea is provided by Jakob Voss (<code>jakob.voss@gbv.de</code>)
+    under the MIT license. It contains some code of 
+    <a href="https://github.com/jagthedrummer/codemirror-ui">Codemirror UI</a>.
+    CodeMirror2 is released under a MIT-style license. jQuery ui is 
     released under the MIT or GPL Version 2 license.</p>
 </body>
 </html>

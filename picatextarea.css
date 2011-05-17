@@ -5,9 +5,53 @@ span.pica-error     { color: #dd1144; }
 span.pica-sf        { color: #0086B3; font-weight: bold; }
 span.pica-value     { color: #000; }
 
-/* line classes */
+/* line styles */
 .pica-level-0 { }
 .pica-level-1 { background: #FFEEDD !important; }
 .pica-level-2 { background: #FBE3C9 !important; }
 .pica-level-2-next { background: #FBE3C9 !important; border-top: 1px dotted #ddd; }
 
+/* toolbar styles, partly derived from CodeMirror UI, licensed unter MIT License */
+.picatextarea-toolbar {
+    border:1px solid #ccc;
+    background:#eee;
+    position:relative;
+}
+.picatextarea-toolbar input {
+    border: 1px solid #ccc;
+    background: #fefefe;
+    font-family: 'Bitstream Vera Sans Mono','Courier New',monospace;
+    font-size: 12px;
+    height: 16px;
+    margin: 2px;
+    float: left;
+    vertical-align:middle;
+}
+.picatextarea-toolbar-button {
+    display:block;
+    float:left;
+    padding:3px;
+    line-height:0;
+    margin:1px;
+    margin-right:0px;
+}
+.picatextarea-toolbar-button:hover {
+    padding:2px;
+    border:1px solid #ccc;
+}
+.picatextarea-toolbar-button img {
+    line-height:0;
+}
+.picatextarea-toolbar-button.inactive{
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+.picatextarea-clearfix:after { visibility: hidden; display: block;
+  font-size: 0; content:"\0020"; clear: both;  height: 0; }
+.picatextarea-clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .picatextarea-clearfix { height: 1%; }
+.picatextarea-clearfix { display: block; }
+/* close commented backslash hack */

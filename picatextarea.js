@@ -65,42 +65,72 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
   $.widget('ui.picatextarea',{
     options: {
       lineNumbers: true,
-      mode: 'pica'
+      mode: 'pica',
+      toolbar: false,
+      images: './img/silk/',
+      // levelBackground: true,
     },
     _create: function() {
       var me = this;
       var textarea = me.element.get(0);
       
-      var events = { onCursorActivity: [], onChange: [] };
+      this.images = this.options.images;
+      delete this.options.images;
       
+      this.customOnChange = this.options.onChange;
+      this.options.onChange = function(editor,tc) { me.onChange(tc); };
+
+      this.customOnCursorActivity = this.options.onCursorActivity;      
+      this.options.onCursorActivity = function(editor,tc) { me.onCursorActivity(); };     
+            
       if (me.options.showCurrentDataAt) {
-        var sca = $(me.options.showCurrentDataAt);
+        this.showCurrentDataAt = $(me.options.showCurrentDataAt);
         delete me.options.showCurrentDataAt;
-        events.onCursorActivity.push(function(){
-          me.showData( me.getDataAt(), sca.empty() );
-        });
       }
-
-      events.onChange.push( function(editor,tc) {
-        me.highlightLines.call(me, tc.from.line);
-      } );
-
-      // utility function
-      var caller = function(a) {
-        if (a.length == 0) return null;
-        if (a.length == 1) return a[0];
-        return function() { for (var i = 0; i < a.length; ++i) a[i](); }
+ 
+      this.loadVia = this.options.load;
+      
+      // known toolbar elements
+      this.toolbarElements = {
+        'undo': {type:"button", title:"Undo", image:"arrow_undo.png", action: function() {me.codemirror.undo();} },
+        'redo': {type:"button", title:"Redo", image:"arrow_redo.png", action: function() {me.codemirror.redo();} },
+        'load': {type:"button", title:"Load", image:"page_white_get.png", action: function() { me.loadValue();} },
+        'save': {type:"button", title:"Save", image:"page_white_put.png", action: function() {me.saveValue();} },
+        'name': {type:"input", size:20},
+        // TODO: 'sort', 'validate', 'about', ...
       };
-
-      me.options.onCursorActivity = events.onCursorActivity[0];
-      for (var e in events) {
-        if (me.options[e]) events[e].push(me.options[e]);
-        me.options[e] = caller( events[e] );
+      
+      var toolbarSelect = this.options.toolbar;
+      delete this.options.toolbar;
+      
+      if (toolbarSelect) {
+        if (typeof toolbarSelect != "object")
+          toolbarSelect = ["undo","redo","name","load","save"]; // default toolbar
+        $('<div>').prependTo( textarea.parentNode ).append(
+          this.toolbar = $('<div class="picatextarea-clearfix picatextarea-toolbar">')
+        );        
+        for (var i = 0; i < toolbarSelect.length; i++) {
+          var spec = toolbarSelect[i]
+          var element = this.createToolbarElement(spec);
+          if (!element) continue;
+          if (typeof spec == "string") {
+              if (spec == "undo")
+                (this.undoButton = element).addClass('inactive');
+              else if (spec == "redo") 
+                (this.redoButton = element).addClass('inactive');
+              else if (spec == "name")   
+                this.nameInput = element.find('input');
+          }
+          this.toolbar.append(element);
+        }
       }
 
       me.codemirror = CodeMirror.fromTextArea( textarea, me.options );
+      var wrapper = $(me.codemirror.getWrapperElement());
+      wrapper.addClass('picatextarea');
+      if ( this.toolbar ) wrapper.css('border-top','0px');
       me.highlightLines(0);
-    },
+    },   
     getDataAt: function(line,ch) {
       var editor = this.codemirror;
       
@@ -150,9 +180,7 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       }      
     },
     highlightLines: function(from) {
-      // from = (from > 0) ? from-1 : 0; // TODO
-      from = 0;
-      editor = this.codemirror;
+      var editor = this.codemirror;
       var lines = editor.getValue().split(/\n/);
       var level = lines[from].charAt(0);
       for(var i=from; i<lines.length; i++) {
@@ -161,6 +189,70 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
          var c = 'pica-level-'+level;
          editor.setLineClass(i,c);
       }
-    }
+    },
+    onChange: function(tc) {
+      this.highlightLines(0); // TODO: tc.from.line
+      if (this.undoButton || this.redoButton) {
+        var his = this.codemirror.historySize();
+        if (this.undoButton && his['undo'] > 0) {
+          this.undoButton.removeClass('inactive');
+        } else {
+          this.undoButton.addClass('inactive');
+        }
+        if (this.redoButton && his['redo'] > 0) {
+          this.redoButton.removeClass('inactive');
+        } else {
+          this.redoButton.addClass('inactive');
+        }
+      }
+      if (this.customOnChange) this.customOnChange();
+    },
+    onCursorActivity: function() {
+      if (this.showCurrentDataAt) {
+        this.showData( this.getDataAt(), this.showCurrentDataAt.empty() );
+      }      
+      if (this.customOnCursorActivity) this.customOnCursorActivity();
+    },           
+    createToolbarElement: function(spec) {
+      if (!this.toolbar) return;
+
+      if (typeof spec == "string") {
+        spec = this.toolbarElements[spec];
+      }  
+      if (typeof spec != "object" || typeof spec.type == "undefined") return spec;
+
+      var element;
+      if (spec.type == "button") {
+        var button = $('<a href="#" class="picatextarea-toolbar-button">');
+        button.attr('title',spec.title);
+        var action = spec.action;
+        button.click( function() { action(); return false; } );
+    
+        var img = $('<img border="0">').attr('src',this.images+spec.image);
+        button.append(img);
+        return button;
+      } else if (spec.type == "input") {
+        var size = typeof spec.size == "number" ? spec.size : 12;
+        var input = $('<input type="text">').attr('size',size);
+        var inputWrap = $('<div class="codemirror-ui-find-bar">');
+        inputWrap.append( input );
+        return inputWrap;
+      }
+    },
+    loadValue: function() {
+      if (!this.loadVia) return;
+      var me = this;
+      var name;
+      if (this.nameInput) name = this.nameInput.val();
+      var callback = function(content,error) {
+        if (error) alert(error);
+        else if (content) {
+          me.codemirror.setValue(content);
+          me.justLoaded = true;
+        }
+      };
+      this.loadVia(name,callback);
+    },
+    saveValue: function() { /* ... */ }
   });
 }
