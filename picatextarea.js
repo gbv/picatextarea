@@ -71,28 +71,35 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       var me = this;
       var textarea = me.element.get(0);
       
-      var onCursorActivity = [];
-      if (me.options.onCursorActivity) {
-        onCursorActivity.push(me.options.onCursorActivity);
-      }
+      var events = { onCursorActivity: [], onChange: [] };
       
       if (me.options.showCurrentDataAt) {
         var sca = $(me.options.showCurrentDataAt);
         delete me.options.showCurrentDataAt;
-        onCursorActivity.push(function(){
-          me.showData( me.getDataAt() ,sca.empty() );
+        events.onCursorActivity.push(function(){
+          me.showData( me.getDataAt(), sca.empty() );
         });
       }
-      
-      if( onCursorActivity.length > 0 ) {
-        me.options.onCursorActivity = function() {
-          for (var i = 0; i < onCursorActivity.length; ++i) {
-            onCursorActivity[i]();
-          }
-        };
+
+      events.onChange.push( function(editor,tc) {
+        me.highlightLines.call(me, tc.from.line);
+      } );
+
+      // utility function
+      var caller = function(a) {
+        if (a.length == 0) return null;
+        if (a.length == 1) return a[0];
+        return function() { for (var i = 0; i < a.length; ++i) a[i](); }
+      };
+
+      me.options.onCursorActivity = events.onCursorActivity[0];
+      for (var e in events) {
+        if (me.options[e]) events[e].push(me.options[e]);
+        me.options[e] = caller( events[e] );
       }
-      
+
       me.codemirror = CodeMirror.fromTextArea( textarea, me.options );
+      me.highlightLines(0);
     },
     getDataAt: function(line,ch) {
       var editor = this.codemirror;
@@ -141,6 +148,19 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       if(data.value) {
         $('<span class="pica-value">').text(data.value).appendTo(element);
       }      
+    },
+    highlightLines: function(from) {
+      // from = (from > 0) ? from-1 : 0; // TODO
+      from = 0;
+      editor = this.codemirror;
+      var lines = editor.getValue().split(/\n/);
+      var level = lines[from].charAt(0);
+      for(var i=from; i<lines.length; i++) {
+         var l = lines[i].charAt(0);
+         if ( l.match(/[0-2]/) ) level = l;
+         var c = 'pica-level-'+level;
+         editor.setLineClass(i,c);
+      }
     }
   });
 }

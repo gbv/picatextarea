@@ -33,7 +33,7 @@ pre {
   background-color: #eee;
   padding: 0.6em;
 }
-a:link, a:visited, .quasilink {
+a:link, a:visited {
   color: #00f;
   cursor: pointer;
   text-decoration: none;
@@ -44,7 +44,7 @@ a:hover {
 
 /* additional styles for codemirror textareas */
 .CodeMirror {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   height: auto;
   max-height: 600px;
   font-family: 'Bitstream Vera Sans Mono','Courier New',monospace;
@@ -53,7 +53,7 @@ a:hover {
 .CodeMirror-gutter-text {
   background: #eee;
   color: #aaa;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #ccc;
   padding-right: 5px;
 }
   </style>
@@ -83,10 +83,11 @@ a:hover {
 </form>
 <script>
 var myTextarea = document.getElementById("picaedit-1");
+var highlines = [];
 var picaedit = CodeMirror.fromTextArea( myTextarea, {
   lineNumbers: true,
   mode: "pica",
-  onChange: function(editor) { /* ... */ }
+  onChange: function(editor,tc) { /* ... */ }
 });
 </script>
   <p>The second PICA textarea is instanciated as widget. Click into the textarea 
@@ -172,20 +173,17 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
     $('#picaedit').picatextarea();
 });</pre>
 
-  <h2>Getting the code</h2>
-  <p>The source code and this example page is 
-    <a href="http://github.com/nichtich/picatextarea">available at github</a>. The only
-    files you need in addition to third party libraries are
-    <code>picatextarea.js</code> and <code>picatextarea.css</code>.
-    To compress the JavaScript file you can use
-    <a href="http://marijnhaverbeke.nl/uglifyjs">UglifyJS JavaScript minification</a>.
-  </p>
-
   <h2 id="api">Widget Options</h2>
   <dl>
-    <dt id="showCurrentDataAt"><code>showCurrentDataAt(element)</code></dt>
+    <dt id="showCurrentDataAt"><code>showCurrentDataAt</code></dt>
     <dd>Always display tag, subfield, and value from the current cursor position at a
       given element.</dd>
+    <dt id="toolbar"><code>toolbar</code></dt>
+    <dd>Display a toolbar. With <code>toolbar: true</code> a default toolbar is shown.
+      Alternatively you can provide an array with toolbar elements. Known elements are
+      <code>undo</code>, <code>redo</code>, <code></code> ...
+      <!-- sort -->
+    </dd>
   </dl>
 
   <h2 id="api">Widget API</h2>
@@ -205,6 +203,15 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
       a given DOM element.
     </dd>
   </dl>
+
+  <h2>Getting the code</h2>
+  <p>The source code and this example page is 
+    <a href="http://github.com/nichtich/picatextarea">available at github</a>. The only
+    files you need in addition to third party libraries are
+    <code>picatextarea.js</code> and <code>picatextarea.css</code>.
+    To compress the JavaScript file you can use
+    <a href="http://marijnhaverbeke.nl/uglifyjs">UglifyJS JavaScript minification</a>.
+  </p>
 
   <h2>Author and license</h2>
   <p>PICA textarea is provided by Jakob Voss (<code>jakob.voss@gbv.de</code>) as 

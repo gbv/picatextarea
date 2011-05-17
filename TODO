@@ -1,8 +1,9 @@
 Additional features
 -------------------
 * load records via unAPI
-* show level separators
-* highlight error lines
+* show separators between exemplar (level 2 with different occ)
+* highlight error lines at the grid
+* sort tags
 * add a button bar 
   with http://www.octolabs.com/javascripts/codemirror-ui/
 * show record diffs

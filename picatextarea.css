@@ -5,4 +5,9 @@ span.pica-error     { color: #dd1144; }
 span.pica-sf        { color: #0086B3; font-weight: bold; }
 span.pica-value     { color: #000; }
 
-.pica-highline { background: #f0e68c !important; } /* TODO: needed where? */
+/* line classes */
+.pica-level-0 { }
+.pica-level-1 { background: #FFEEDD !important; }
+.pica-level-2 { background: #FBE3C9 !important; }
+.pica-level-2-next { background: #FBE3C9 !important; border-top: 1px dotted #ddd; }
+
