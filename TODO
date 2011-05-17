@@ -1,12 +1,13 @@
 Additional features
 -------------------
-* load records via unAPI
 * show separators between exemplar (level 2 with different occ)
 * highlight error lines at the grid
-* sort tags
-* add a button bar 
-  with http://www.octolabs.com/javascripts/codemirror-ui/
+* action to sort tags
+* add labels to toolbar elements
+* better load records via unAPI and save records
 * show record diffs
 * show how to best apply syntax highlighting without an editor
 * show information about the current field
+* show information about PPN and number of fields and exemplars
+* show error messages
 * search and highlight specific fields by tag and subfield
