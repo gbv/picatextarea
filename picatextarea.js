@@ -166,6 +166,7 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
         
       return obj;
     },
+    getValue: function() { return this.codemirror.getValue(); },
     showData: function(data, element) {
       element = $(element);
       if(data.tag) {

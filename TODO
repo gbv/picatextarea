@@ -8,6 +8,7 @@ Additional features
 * show record diffs
 * show how to best apply syntax highlighting without an editor
 * show information about the current field
+* find tags and subfields
 * show information about PPN and number of fields and exemplars
 * show error messages
 * search and highlight specific fields by tag and subfield
