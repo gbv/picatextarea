@@ -94,9 +94,10 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       this.toolbarElements = {
         'undo': {type:"button", title:"Undo", image:"arrow_undo.png", action: function() {me.codemirror.undo();} },
         'redo': {type:"button", title:"Redo", image:"arrow_redo.png", action: function() {me.codemirror.redo();} },
-        'load': {type:"button", title:"Load", image:"page_white_get.png", action: function() { me.loadValue();} },
+        'load': {type:"button", title:"Load", image:"page_white_get.png", action: function() {me.loadValue();} },
         'save': {type:"button", title:"Save", image:"page_white_put.png", action: function() {me.saveValue();} },
-        'name': {type:"input", size:20},
+        'name': {type:"input", size:20, label:"id:"},
+        'error': {type:"info" },
         // TODO: 'sort', 'validate', 'about', ...
       };
       
@@ -113,6 +114,7 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
           var spec = toolbarSelect[i]
           var element = this.createToolbarElement(spec);
           if (!element) continue;
+          // TODO: allow custom elements to be this roles
           if (typeof spec == "string") {
               if (spec == "undo")
                 (this.undoButton = element).addClass('inactive');
@@ -120,6 +122,8 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
                 (this.redoButton = element).addClass('inactive');
               else if (spec == "name")   
                 this.nameInput = element.find('input');
+              else if (spec == "error")
+                this.errorInfo = element;
           }
           this.toolbar.append(element);
         }
@@ -218,7 +222,9 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       if (!this.toolbar) return;
 
       if (typeof spec == "string") {
+        var name = spec;
         spec = this.toolbarElements[spec];
+        if (spec) spec.name = name;
       }  
       if (typeof spec != "object" || typeof spec.type == "undefined") return spec;
 
@@ -233,26 +239,42 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
         button.append(img);
         return button;
       } else if (spec.type == "input") {
+        var inputWrap = $('<div class="picatextarea-toolbar-element">');
+        if (spec.label) {
+          inputWrap.append( $('<label>').text(spec.label) );
+        }
         var size = typeof spec.size == "number" ? spec.size : 12;
         var input = $('<input type="text">').attr('size',size);
-        var inputWrap = $('<div class="codemirror-ui-find-bar">');
         inputWrap.append( input );
         return inputWrap;
+      } else if (spec.type == "info") {
+        var info = $('<div class="picatextarea-toolbar-info">');
+        if (spec.name == "error") info.addClass("picatextarea-toolbar-error");
+        info.text("");
+        return info;
       }
+    },
+    showError: function(msg) {
+        if (this.errorInfo) this.errorInfo.text(msg).show();
+        else alert(msg);
+    },
+    noError: function() {
+        if (this.errorInfo) this.errorInfo.text("").hide();
     },
     loadValue: function() {
       if (!this.loadVia) return;
       var me = this;
-      var name = this.nameInput ? this.nameInput.val() : null;
+      var id = this.nameInput ? this.nameInput.val() : null;
       var callback = function(response) {
         if (typeof response != "object") response = {error:"response broken"};
-        if (response.error) alert(response.error);
+        me.noError();
+        if (response.error) me.showError(response.error);
         else if (response.value) {
           me.codemirror.setValue(response.value);
 //          me.justLoaded = true;
         }
       };
-      this.loadVia(callback,name);
+      this.loadVia(callback,id);
     },
     saveValue: function() { /* ...TODO... */ }
   });

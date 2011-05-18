@@ -17,27 +17,35 @@ span.pica-value     { color: #000; }
     background:#eee;
     position:relative;
 }
-.picatextarea-toolbar input {
-    border: 1px solid #ccc;
-    background: #fefefe;
-    font-family: 'Bitstream Vera Sans Mono','Courier New',monospace;
-    font-size: 12px;
+.picatextarea-toolbar-element {
     height: 16px;
     margin: 2px;
     float: left;
     vertical-align:middle;
+    font-size: 12px;
+}
+.picatextarea-toolbar-element label {
+    margin-left: 4px;
+    margin-right: 2px;
+    color: #999;
+}
+.picatextarea-toolbar input {
+    border: 1px solid #ccc;
+    background: #fefefe;
+    font-family: 'Bitstream Vera Sans Mono','Courier New',monospace;
+    height: 16px;
 }
 .picatextarea-toolbar-button {
     display:block;
     float:left;
-    padding:3px;
+    padding:2px;
+    border:1px solid #eee;
     line-height:0;
     margin:1px;
-    margin-right:0px;
 }
 .picatextarea-toolbar-button:hover {
     padding:2px;
-    border:1px solid #ccc;
+    border:1px outset #ccc;
 }
 .picatextarea-toolbar-button img {
     line-height:0;
@@ -46,6 +54,18 @@ span.pica-value     { color: #000; }
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
     opacity: .5;
+}
+.picatextarea-toolbar-error {
+   color:#f00;
+}
+.picatextarea-toolbar-info {
+   height: 16px;
+   margin: 2px;
+   padding-right: 4px;
+   float: left;
+   vertical-align:bottom;
+   font-size: 12px;
+   float: right;
 }
 
 .picatextarea-clearfix:after { visibility: hidden; display: block;

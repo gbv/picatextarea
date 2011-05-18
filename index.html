@@ -117,10 +117,10 @@ This is an error
 $(document).ready(function() {
   $('#example2').picatextarea({
     showCurrentDataAt:'#current-data',
-    toolbar: ['undo','redo','name','load'],
-    load: function(callback,name) {
+    toolbar: ['undo','redo','name','load','error'],
+    load: function(callback,id) {
       var url = "unapi-demo.php?callback=?";
-      $.getJSON( url, {id:name}, callback );
+      $.getJSON( url, {id:id}, callback );
     }
   });
 });
@@ -187,20 +187,20 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
     <dd>Display a toolbar. With <code>toolbar: true</code> a default toolbar with buttons
       for <code>undo</code> and <code>redo</code> is shown. Alternatively you can provide
       an array with toolbar elements. Possible elements are 
-      <code>undo</code>, <code>redo</code>, <code>name</code>, <code>load</code>, and
-      <code>save</code>. <!-- More to follow: sort, load, save, ... -->
+      <code>undo</code>, <code>redo</code>, <code>name</code>, <code>load</code>, 
+      <code>save</code>, and <code>error</code>. <!-- More to follow: sort, load, save, ... -->
     </dd>
     <dt id="load"><code>load</code><dt>
     <dd>Function that is called to load content into the editor. The function is passed
-      a <code>callback</code> function and possibly a <code>name</code> if the editor
+      a <code>callback</code> function and possibly a <code>id</code> if the editor
       contains a name input field. The function must call the callback with a 
       <code>{value,error,name}</code> object. If <code>error</code> is set to some error
       message, the loading is assumed to be failed. Here is an example of a load
       function that restores a default value:
       <pre>load: function(callback) { callback({ value: defaultValue }); }</pre>
       And a load function that gets a response from a server via JSONP:
-     <pre>load: function(callback,name) {
-          $.getJSON( "http://example.org/getpicadata?callback=?, {id:name}, callback ); 
+     <pre>load: function(callback, id) {
+          $.getJSON( "http://example.org/getpicadata?callback=?, {id:id}, callback ); 
       }</pre>
     </dd>
     <dt id="save"><code>save</code><dt>
