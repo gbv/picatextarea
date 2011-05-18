@@ -25,13 +25,13 @@ if ($content === false || $info['http_code'] != 200) {
 
 if ($error) {
   $json = array(
-    "id"    => $id,
+    "name"    => $id,
     "error" => $error
   );
 } else {
   $json = array(
-    "pp" => $content,
-    "id" => $id,
+    "value" => $content,
+    "name"  => $id,
   );
 }
 

@@ -118,13 +118,10 @@ $(document).ready(function() {
   $('#example2').picatextarea({
     showCurrentDataAt:'#current-data',
     toolbar: ['undo','redo','name','load'],
-    load: function(id,callback) {
+    load: function(callback,name) {
       var url = "unapi-demo.php?callback=?";
-      $.getJSON( url, {id:id}, function(content) {
-        if (!content) content = { pp: "", error: "server did not respond" };
-        callback(content.pp,content.error);
-      } );
-    },
+      $.getJSON( url, {id:name}, callback );
+    }
   });
 });
 </script>
@@ -194,7 +191,18 @@ var picaedit = CodeMirror.fromTextArea( myTextarea, {
       <code>save</code>. <!-- More to follow: sort, load, save, ... -->
     </dd>
     <dt id="load"><code>load</code><dt>
-    <dd>Function that is called to load content into the editor.</dd>
+    <dd>Function that is called to load content into the editor. The function is passed
+      a <code>callback</code> function and possibly a <code>name</code> if the editor
+      contains a name input field. The function must call the callback with a 
+      <code>{value,error,name}</code> object. If <code>error</code> is set to some error
+      message, the loading is assumed to be failed. Here is an example of a load
+      function that restores a default value:
+      <pre>load: function(callback) { callback({ value: defaultValue }); }</pre>
+      And a load function that gets a response from a server via JSONP:
+     <pre>load: function(callback,name) {
+          $.getJSON( "http://example.org/getpicadata?callback=?, {id:name}, callback ); 
+      }</pre>
+    </dd>
     <dt id="save"><code>save</code><dt>
     <dd>Function that is called to save content from the editor.</dd>
   </dl>

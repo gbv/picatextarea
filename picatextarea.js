@@ -243,17 +243,17 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
     loadValue: function() {
       if (!this.loadVia) return;
       var me = this;
-      var name;
-      if (this.nameInput) name = this.nameInput.val();
-      var callback = function(content,error) {
-        if (error) alert(error);
-        else if (content) {
-          me.codemirror.setValue(content);
-          me.justLoaded = true;
+      var name = this.nameInput ? this.nameInput.val() : null;
+      var callback = function(response) {
+        if (typeof response != "object") response = {error:"response broken"};
+        if (response.error) alert(response.error);
+        else if (response.value) {
+          me.codemirror.setValue(response.value);
+//          me.justLoaded = true;
         }
       };
-      this.loadVia(name,callback);
+      this.loadVia(callback,name);
     },
-    saveValue: function() { /* ... */ }
+    saveValue: function() { /* ...TODO... */ }
   });
 }
