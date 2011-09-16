@@ -8,6 +8,7 @@
 
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
 
+  <!--xsl:param name="base">http://gbv.github.com/picatextarea/</xsl:param-->
   <xsl:param name="base"></xsl:param>
 
   <!-- Utility method to select specific PICA+ fields -->
@@ -106,7 +107,17 @@ a:hover {
         <script src="{$base}lib/codemirror.js"></script>
         <link rel="stylesheet" href="{$base}picatextarea.css" />
         <script src="{$base}picatextarea.js"></script>
-        <xsl:call-template name="css"/>
+  <script> 
+jQuery(document).ready(function() {
+  jQuery('#picaedit').picatextarea({
+      //showCurrentDataAt:'#current-data',
+      toolbar: ['undo','redo','error'],
+      lineNumbers: false,
+      images: "<xsl:value-of select="$base"/>img/silk/",
+  });
+});
+</script>
+      <xsl:call-template name="css"/>
       </head>
       <body>
         <h1><xsl:value-of select="$title"/></h1>
@@ -114,15 +125,6 @@ a:hover {
           <textarea id="picaedit"><xsl:apply-templates select="pica:datafield" mode="plain"/></textarea>
           <!--div><tt id="current-data">&#xA0;</tt></div-->
         </form>
-<script> 
-$(document).ready(function() {
-  $('#picaedit').picatextarea({
-      //showCurrentDataAt:'#current-data',
-      toolbar: ['undo','redo','error'],
-      lineNumbers: false,
-  });
-});
-</script>
         <div id="footer">
           Syntax highlighting via 
           <a href="http://github.com/gbv/picatextarea/">PICA textarea</a>
