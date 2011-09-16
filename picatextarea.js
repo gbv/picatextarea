@@ -92,8 +92,8 @@ if (typeof jQuery != 'undefined') if (typeof jQuery.widget != 'undefined') {
       
       // known toolbar elements
       this.toolbarElements = {
-        'undo': {type:"button", title:"Undo", image:"arrow_undo.png", action: function() {me.codemirror.undo();} },
-        'redo': {type:"button", title:"Redo", image:"arrow_redo.png", action: function() {me.codemirror.redo();} },
+        'undo': {type:"button", title:"Undo (Ctrl+Z)", image:"arrow_undo.png", action: function() {me.codemirror.undo();} },
+        'redo': {type:"button", title:"Redo (Ctrl+Y)", image:"arrow_redo.png", action: function() {me.codemirror.redo();} },
         'load': {type:"button", title:"Load", image:"page_white_get.png", action: function() {me.loadValue();} },
         'save': {type:"button", title:"Save", image:"page_white_put.png", action: function() {me.saveValue();} },
         'name': {type:"input", size:20, label:"id:"},
