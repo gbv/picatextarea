@@ -1,6 +1,6 @@
 **DEPRECATED** 
 
-> See <https://gbv.github.io/lipstick/codemirro> for a replacement!
+> See <https://github.com/gbv/pica-editor> for a replacement!
 
 PICA textarea is a JavaScript library to provide an editor interface
 with syntax highlighting for PICA+ data. Please read the index.html
